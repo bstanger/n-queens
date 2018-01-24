@@ -60,8 +60,6 @@
         0 <= colIndex && colIndex < this.get('n')
       );
     },
-
-
 /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
@@ -79,12 +77,22 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      var data = this.rows();
+      var row = data[rowIndex];
+      var sum = row.reduce((a, b) => a + b);
+      return (sum >= 2);
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      var data = this.rows();
+      for (var i = 0; i < data.length; i++) {
+        var hasConflict = this.hasRowConflictAt(i);
+        if (hasConflict) {
+          return true;
+        }
+      }
+      return false;
     },
 
 
