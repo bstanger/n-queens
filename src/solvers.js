@@ -16,64 +16,48 @@
 
 // assume n = 4
 window.findNRooksSolution = function(n) {
-  // var solution;
-  // var maxIndex = n - 1;
-  // // Come up with all possible coordinate pairs [0,0][0,1]...[3,3] - 16
+  var solution;
+  var board = new Board({n: n});
+  
+  // start blank board
+  // vars: data of board, possible cols [0, 1, n-1]
 
-  var possibleCols = []; // [0, 1, 2, 3]
-  console.log('n: ', n);
-  for (var j = 0; j < n; j++) {
-    possibleCols.push(j);
-  }
-
-  // for every n spots, make combo
-  // aiming for: [[0,1],[0,2],[2,3],[3,1]]
-  // remove possible row and column as go
-
-  var possibleValues = [0, 1];
-  var nItemCombo = [];
-  // Loop for each final coordinate
-  for (var i = 0; i < n; i++) {
-    var rowCombo = [];
+  var makeRow = function(rowsToGo, board) {
     
-    while (rowCombo.length < n) {
-      for (var k = 0; k < possibleValues.length; k++) { // possibleValues[k] = 0 or 1
-        if (possibleValues[k] === 1) {
-          rowCombo.push(possibleValues[k]); // [1]
-          while (rowCombo.length < n) {
-              rowCombo.push(0); // rowCombo = [1,0,0,0]
-          }
-        } else 
-        // [0] or [1]
-      }
+    if (rowsToGo === 0) {
+      solution = board.rows();
+      return;
     }
 
-
-    for (var k = 0; k < possibleValues.length; k++) { // possibleValues[k] = 0 or 1
-      for (var m = 0; m < possibleCols.length; m++) { // possibleCols[m] = 0, 1, 2, 3
-        rowCombo.push(possibleValues[k])
-
-      //   coordinatePair.push(possibleRows[k], possibleCols[m]);
-      //   possibleRows.splice(k, 1); // [0, 1, 2]
-      //   possibleCols.splice(m, 1); // [1, 2, 3]
-      //   nItemCombo.push(coordinatePair);
-        // nItemCombo == [[0,1]]
-      }
+    var rowIdx = n - rowsToGo;
+    
+    for (var i = 0; i < n; i++) {
+      board.togglePiece(rowIdx, i);
+      if (board.hasAnyRooksConflicts()) { // if has conflicts
+        board.togglePiece(rowIdx, i);
+      } else {
+        makeRow(--rowsToGo, board);
+      }      
     }
-    // nItemCombo = [[0,1,0,0],[0,0,0,1],[0,0,1,0],[1,0,0,0]]
+  
   }
+  // recursive fn (rowsToGo, board)
+    
+    // if no rounds left, return with board
   
-  debugger;
-
-  // remove duplicates
-  // {0:1,0:2,[2,3],[3,1]} and {[0,1],[0,2],[3,1],[2,3]}
-
-  // run tests to check for conflicts
-  
-
+    // otherwise, try each possible cols
+      // for col, toggle piece
+      // check for conflicts
+      // if conflict, toggle piece back and finish, for loop returns to try next
+      // else no conflict, call recursive fn with --rounds, currentBoard
+    
+  // recurse(n rounds, board)
+  makeRow(n, board);
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
+
+// nItemCombo = [[0,1,0,0],[0,0,0,1],[0,0,1,0],[1,0,0,0]]
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
