@@ -18,9 +18,6 @@
 window.findNRooksSolution = function(n) {
   var solution;
   var board = new Board({n: n});
-  
-  // start blank board
-  // vars: data of board, possible cols [0, 1, n-1]
 
   var makeRow = function(rowsToGo, board) {
     
@@ -40,18 +37,7 @@ window.findNRooksSolution = function(n) {
       }      
     }
   
-  }
-  // recursive fn (rowsToGo, board)
-    
-    // if no rounds left, return with board
-  
-    // otherwise, try each possible cols
-      // for col, toggle piece
-      // check for conflicts
-      // if conflict, toggle piece back and finish, for loop returns to try next
-      // else no conflict, call recursive fn with --rounds, currentBoard
-    
-  // recurse(n rounds, board)
+  };
   makeRow(n, board);
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
