@@ -47,8 +47,70 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solutionCount = 0;
+  // create board
 
+  // recursive fn (rowsLeft, board)
+    // var columnsLeft
+
+    // if 0 rowsLeft, increment ct
+    
+    // for each column left...
+      // toggle
+      // if board has conflicts
+        // toggle back
+      // if no board conflict
+        // remove index from columnsLeft
+        // recurse with rows left 0, exit out
+        // toggle back
+        // recurse with same row as current row, same board
+
+  var board = new Board({n: n});
+
+  var makeRow = function(rowsToGo, board, columnsLeft) {
+    if (!columnsLeft) {
+      columnsLeft = [];
+      for (var m = 0; m < n; m++) {
+        columnsLeft.push(m);
+      }
+    }
+    
+    if (rowsToGo === 0) {
+      solutionCount++;
+      var continueLoop = true;
+      if(board.hasMinorDiagonalConflictAt(n - 1)){
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    var rowIdx = n - rowsToGo;
+    
+    for (var i = 0; i < columnsLeft.length; i++) {
+      board.togglePiece(rowIdx, columnsLeft[i]);
+
+      if (board.hasAnyRooksConflicts()) { // if has conflicts
+        board.togglePiece(rowIdx, columnsLeft[i]);
+
+      } else {
+        var usedIdx = columnsLeft[i];
+        var idxOfUsedCol = columnsLeft.indexOf(columnsLeft[i]);
+        columnsLeft.splice(idxOfUsedCol, 1);
+
+        if (makeRow(rowsToGo - 1, board)) {
+          board.togglePiece(rowIdx, usedIdx);
+          makeRow(rowsToGo, board, columnsLeft);
+        } else {
+          return;
+        }
+      }      
+    }
+  };
+
+  makeRow(n, board);        
+      
+  // run recursion()
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
